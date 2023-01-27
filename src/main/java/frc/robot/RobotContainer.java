@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.subsystems.Apriltag;
 import frc.robot.subsystems.AutoGenerator;
 import frc.robot.commands.DriveStick;
 import frc.robot.commands.FollowLimelight;
@@ -11,9 +12,12 @@ import frc.robot.commands.ResetGyro;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Stick;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Apriltag;
+import frc.robot.commands.FollowApriltag;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -30,6 +34,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final SwerveDrive m_swervedriveSystem = new SwerveDrive();
   public final Limelight m_Limelight = new Limelight();
+  public final Apriltag m_Apriltag = new Apriltag();
   public final AutoGenerator autoGenerator = new AutoGenerator(m_swervedriveSystem);
   public final Stick driverJoystick =new Stick();
   Supplier<double[]> stickState = () -> driverJoystick.readDriverStick();
@@ -39,7 +44,8 @@ public class RobotContainer {
   public JoystickButton btnResetGyro = driverJoystick.getButton(2);
   public JoystickButton btnUpdateConstants = driverJoystick.getButton(3);
   public JoystickButton btnFollowLimelight = driverJoystick.getButton(4);
-
+  public JoystickButton btnFollowAprilTag = driverJoystick.getButton(5);
+  
 
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -55,6 +61,7 @@ public class RobotContainer {
     new Trigger(btnResetGyro).onTrue(new ResetGyro(m_swervedriveSystem));
     new Trigger(btnUpdateConstants).onTrue(m_swervedriveSystem.UpdateConstantsCommand());    
     new Trigger(btnFollowLimelight).whileTrue(new FollowLimelight(m_swervedriveSystem, m_Limelight));
+    new Trigger(btnFollowAprilTag).whileTrue(new FollowApriltag(m_swervedriveSystem, m_Apriltag));
     
     new Trigger(driverJoystick.pov0).onTrue(m_swervedriveSystem.rotateInPlace(0.));
     new Trigger(driverJoystick.pov90).onTrue(m_swervedriveSystem.rotateInPlace(90));
